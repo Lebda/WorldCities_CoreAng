@@ -25,7 +25,7 @@ namespace WorldCities.Implementations.Repository
         {
             var pagedList = await FindAll(trackChanges)
                 .OrderBy(e => e.Name)
-                //.FilterEmployees(employeeParameters.MinAge, employeeParameters.MaxAge)
+                .Filter(requestParameters)
                 //.Search(employeeParameters.SearchTerm)
                 .Sort(requestParameters)
                 .ToPagedListAsync(requestParameters.QueryMetaData);

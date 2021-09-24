@@ -30,6 +30,8 @@ export class CityComponent implements OnInit {
   public defaultSortOrder: SortDirection = "asc";
   private defaultPageIndex = 0;
   private defaultPageSize = 10;
+  private defaultFilterColumn = "name";
+  private filterQuery: string | null = null;
 
   constructor(private http: HttpClient, @Inject("BASE_URL") private baseUrl: string) {
     this.citiesSource.paginator = this.paginator;
@@ -59,10 +61,11 @@ export class CityComponent implements OnInit {
     );
   }
 
-  public loadDataInitial(): void {
+  public loadDataInitial(query: string | null = null): void {
     const pageEvent = new PageEvent();
     pageEvent.pageIndex = this.defaultPageIndex;
     pageEvent.pageSize = this.defaultPageSize;
+    this.filterQuery = query;
     this.getData(pageEvent);
   }
 
@@ -72,11 +75,16 @@ export class CityComponent implements OnInit {
   }
 
   private createParams(event: PageEvent): HttpParams {
-    const params = new HttpParams()
+    let params = new HttpParams()
       .set("pageIndex", event.pageIndex.toString())
       .set("pageSize", event.pageSize.toString())
       .set("sortColumn", this.sort ? this.sort.active : this.defaultSortColumn)
       .set("sortOrder", this.sort ? this.sort.direction : this.defaultSortOrder);
+    if (this.filterQuery) {
+      params = params
+        .set("filterColumn", this.defaultFilterColumn)
+        .set("filterQuery", this.filterQuery);
+    }
     return params;
   }
 }

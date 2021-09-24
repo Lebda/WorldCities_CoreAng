@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WorldCities.Implementations.Contracts;
 using WorldCities.Models;
@@ -28,7 +27,9 @@ namespace WorldCities.Controllers
             int? pageIndex,
             int? pageSize,
             string sortColumn,
-            string sortOrder)
+            string sortOrder,
+            string filterColumn,
+            string filterQuery)
         {
             CityRequestParameters requestParameters = new(new QueryMetaData()
             {
@@ -36,7 +37,9 @@ namespace WorldCities.Controllers
                 PageSize = pageSize ?? 10,
                 PageIndex = pageIndex ?? 0 ,
                 SortColumn = sortColumn,
-                SortOrder = sortOrder
+                SortOrder = sortOrder,
+                FilterColumn = filterColumn,
+                FilterQuery = filterQuery
             });
             var pagedList = await repository.City.GetAllParamsAsync(requestParameters, false);
 

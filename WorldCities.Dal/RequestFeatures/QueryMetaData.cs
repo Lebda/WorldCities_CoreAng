@@ -29,5 +29,15 @@
         /// Sorting Order ("ASC", "DESC" or null if none set)
         /// </summary>
         public string SortOrder { get; set; }
+
+        /// <summary>
+        /// Filter Column name (or null if none set)
+        /// </summary>
+        public string FilterColumn { get; set; }
+        /// <summary>
+        /// Filter Query string 
+        /// (to be used within the given FilterColumn)
+        /// </summary>
+        public string FilterQuery { get; set; }
     }
 }

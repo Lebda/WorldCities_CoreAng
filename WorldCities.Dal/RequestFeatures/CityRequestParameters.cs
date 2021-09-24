@@ -2,7 +2,7 @@
 {
     public class CityRequestParameters : RequestParameters
     {
-        public CityRequestParameters(QueryMetaData queryMetaData) : base("name", queryMetaData)
+        public CityRequestParameters(QueryMetaData queryMetaData) : base(queryMetaData)
         {
         }
     }

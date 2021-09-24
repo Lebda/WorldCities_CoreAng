@@ -14,6 +14,11 @@ namespace WorldCities.Implementations.RequestFeatures
                     : "ASC";
         }
 
+        public static bool IsValidFilterQuery(this string filterQuery)
+        {
+            return !string.IsNullOrEmpty(filterQuery);
+        }
+
         public static bool IsValidProperty<T>(
             string propertyName,
             bool throwExceptionIfNotFound = true)

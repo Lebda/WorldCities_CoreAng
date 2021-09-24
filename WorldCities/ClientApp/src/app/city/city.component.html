@@ -4,6 +4,11 @@
 <p>Here's a list of cities: feel free to play with it.</p>
 <p *ngIf="!cities$"><em>Loading...</em></p>
 
+<mat-form-field [hidden]="!cities$">
+  <input #help matInput (keyup)="loadDataInitial(help.value)"
+    placeholder="Filter by name (or part of it)...">
+</mat-form-field>
+
 
 <table mat-table [dataSource]="citiesSource" class="table-striped mat-elevation-z8"
   [hidden]="!cities$" matSort (matSortChange)="loadDataInitial()"
