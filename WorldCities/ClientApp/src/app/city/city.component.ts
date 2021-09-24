@@ -1,6 +1,7 @@
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Component, Inject, OnInit, ViewChild } from "@angular/core";
 import { MatPaginator, PageEvent } from "@angular/material/paginator";
+import { MatSort, SortDirection } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
 import { Observable, Subscription } from "rxjs";
 
@@ -17,22 +18,25 @@ export class CityComponent implements OnInit {
   public citiesSource = new MatTableDataSource<City>();
   @ViewChild(MatPaginator)
   public paginator: MatPaginator | null = null;
+  @ViewChild(MatSort)
+  public sort: MatSort | null = null;
 
   public displayedColumns: string[] = ["id", "name", "lat", "lon"];
   public cities$: Observable<ApiResult<City>> | undefined;
   public pageSize = 10;
   public pageIndex = 0;
   public pageLength = 0;
+  public defaultSortColumn = "name";
+  public defaultSortOrder: SortDirection = "asc";
+  private defaultPageIndex = 0;
+  private defaultPageSize = 10;
 
   constructor(private http: HttpClient, @Inject("BASE_URL") private baseUrl: string) {
     this.citiesSource.paginator = this.paginator;
   }
 
   public ngOnInit() {
-    const pageEvent = new PageEvent();
-    pageEvent.pageIndex = 0;
-    pageEvent.pageSize = 10;
-    this.getData(pageEvent);
+    this.loadDataInitial();
   }
 
   public getData(pageEvent: PageEvent): void {
@@ -55,6 +59,13 @@ export class CityComponent implements OnInit {
     );
   }
 
+  public loadDataInitial(): void {
+    const pageEvent = new PageEvent();
+    pageEvent.pageIndex = this.defaultPageIndex;
+    pageEvent.pageSize = this.defaultPageSize;
+    this.getData(pageEvent);
+  }
+
   private getDataSource(event: PageEvent): Observable<ApiResult<City>> {
     const url = "https://localhost:44355/" + "api/Cities";
     return this.http.get<ApiResult<City>>(url, { params: this.createParams(event) });
@@ -63,8 +74,9 @@ export class CityComponent implements OnInit {
   private createParams(event: PageEvent): HttpParams {
     const params = new HttpParams()
       .set("pageIndex", event.pageIndex.toString())
-      .set("pageSize", event.pageSize.toString());
-
+      .set("pageSize", event.pageSize.toString())
+      .set("sortColumn", this.sort ? this.sort.active : this.defaultSortColumn)
+      .set("sortOrder", this.sort ? this.sort.direction : this.defaultSortOrder);
     return params;
   }
 }
