@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace WorldCities.Models.Models
 {
@@ -28,11 +29,13 @@ namespace WorldCities.Models.Models
         /// Country code (in ISO 3166-1 ALPHA-2 format)
         /// </summary>
         [StringLength(150)]
+        [JsonPropertyName("iso2")]
         public string ISO2 { get; set; }
         /// <summary>
         /// Country code (in ISO 3166-1 ALPHA-3 format)
         /// </summary>
         [StringLength(150)]
+        [JsonPropertyName("iso3")]
         public string ISO3 { get; set; }
         #endregion
 

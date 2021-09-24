@@ -41,6 +41,11 @@ namespace WorldCities.Controllers
                 FilterColumn = filterColumn,
                 FilterQuery = filterQuery
             });
+            return await GetCitiesInternal(requestParameters);
+        }
+
+        private async Task<ActionResult<ApiResult<City>>> GetCitiesInternal(CityRequestParameters requestParameters)
+        {
             var pagedList = await repository.City.GetAllParamsAsync(requestParameters, false);
 
             return Ok(new ApiResult<City>(pagedList));

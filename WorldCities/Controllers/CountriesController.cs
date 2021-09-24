@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WorldCities.Implementations.Contracts;
 using WorldCities.Models.Models;
+using WorldCities.Models.RequestFeatures;
+using WorldCities.Models.ResponseFeatures;
 
 namespace WorldCities.Controllers
 {
@@ -17,12 +18,34 @@ namespace WorldCities.Controllers
             this.repository = repository;
         }
 
-        // GET: api/Countries
+        // GET: api/Countries GetCountries
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Country>>> GetCountries()
+        public async Task<ActionResult<ApiResult<Country>>> GetCountries(
+            int? pageIndex,
+            int? pageSize,
+            string sortColumn,
+            string sortOrder,
+            string filterColumn,
+            string filterQuery)
         {
-            var items = await repository.Country.GetAllAsync(false);
-            return Ok(items);
+            CountryRequestParameters requestParameters = new(new QueryMetaData()
+            {
+                IsZeroBase = true,
+                PageSize = pageSize ?? 10,
+                PageIndex = pageIndex ?? 0,
+                SortColumn = sortColumn,
+                SortOrder = sortOrder,
+                FilterColumn = filterColumn,
+                FilterQuery = filterQuery
+            });
+            return await GetCountryInternal(requestParameters);
+        }
+
+        private async Task<ActionResult<ApiResult<Country>>> GetCountryInternal(CountryRequestParameters requestParameters)
+        {
+            var pagedList = await repository.Country.GetAllParamsAsync(requestParameters, false);
+
+            return Ok(new ApiResult<Country>(pagedList));
         }
 
         // GET: api/Countries/5

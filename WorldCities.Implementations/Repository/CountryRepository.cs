@@ -3,8 +3,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using WorldCities.Implementations.Contracts;
+using WorldCities.Implementations.RequestFeatures;
 using WorldCities.Models;
 using WorldCities.Models.Models;
+using WorldCities.Models.RequestFeatures;
 
 namespace WorldCities.Implementations.Repository
 {
@@ -13,6 +15,19 @@ namespace WorldCities.Implementations.Repository
         public CountryRepository(WorldCitiesDbContext repositoryContext)
             : base(repositoryContext)
         {
+        }
+
+        public async Task<PagedList<Country>> GetAllParamsAsync(
+                CountryRequestParameters requestParameters,
+                bool trackChanges)
+        {
+            var pagedList = await FindAll(trackChanges)
+                .OrderBy(e => e.Name)
+                .Filter(requestParameters)
+                //.Search(employeeParameters.SearchTerm)
+                .Sort(requestParameters)
+                .ToPagedListAsync(requestParameters.QueryMetaData);
+            return pagedList;
         }
 
         public async Task<IEnumerable<Country>> GetAllAsync(bool trackChanges) =>
