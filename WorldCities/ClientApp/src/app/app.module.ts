@@ -10,9 +10,16 @@ import { AppComponent } from "./app.component";
 import { CityComponent } from "./city/city.component";
 import { HomeComponent } from "./home/home.component";
 import { NavMenuComponent } from "./nav-menu/nav-menu.component";
+import { CountryComponent } from "./country/country.component";
 
 @NgModule({
-  declarations: [AppComponent, NavMenuComponent, HomeComponent, CityComponent],
+  declarations: [
+    AppComponent,
+    NavMenuComponent,
+    HomeComponent,
+    CityComponent,
+    CountryComponent,
+  ],
   imports: [
     BrowserModule.withServerTransition({ appId: "ng-cli-universal" }),
     HttpClientModule,
