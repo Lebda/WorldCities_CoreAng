@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using WorldCities.Implementations.Contracts;
 using WorldCities.Implementations.RequestFeatures;
+using WorldCities.Implementations.Repository;
 using WorldCities.Models;
 using WorldCities.Models.Models;
 using WorldCities.Models.RequestFeatures;
@@ -26,7 +27,7 @@ namespace WorldCities.Implementations.Repository
                 .OrderBy(e => e.Name)
                 //.FilterEmployees(employeeParameters.MinAge, employeeParameters.MaxAge)
                 //.Search(employeeParameters.SearchTerm)
-                //.Sort(employeeParameters.OrderBy)
+                .Sort(requestParameters)
                 .ToPagedListAsync(requestParameters.QueryMetaData);
             return pagedList;
         }

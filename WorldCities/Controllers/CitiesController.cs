@@ -26,13 +26,17 @@ namespace WorldCities.Controllers
         [HttpGet(Name = "GetCities")]
         public async Task<ActionResult<ApiResult<City>>> GetCities(
             int? pageIndex,
-            int? pageSize)
+            int? pageSize,
+            string sortColumn,
+            string sortOrder)
         {
             CityRequestParameters requestParameters = new(new QueryMetaData()
             {
                 IsZeroBase = true,
                 PageSize = pageSize ?? 10,
-                PageIndex = pageIndex ?? 0   
+                PageIndex = pageIndex ?? 0 ,
+                SortColumn = sortColumn,
+                SortOrder = sortOrder
             });
             var pagedList = await repository.City.GetAllParamsAsync(requestParameters, false);
 

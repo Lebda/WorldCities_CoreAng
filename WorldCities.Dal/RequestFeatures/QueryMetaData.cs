@@ -19,5 +19,15 @@
             get => pageSize;
             set => pageSize = (value > MaxPageSize) ? MaxPageSize : value;
         }
+
+        /// <summary>
+        /// Sorting Column name (or null if none set)
+        /// </summary>
+        public string SortColumn { get; set; }
+
+        /// <summary>
+        /// Sorting Order ("ASC", "DESC" or null if none set)
+        /// </summary>
+        public string SortOrder { get; set; }
     }
 }
