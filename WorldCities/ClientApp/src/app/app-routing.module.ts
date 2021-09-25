@@ -10,6 +10,7 @@ const routes: Routes = [
   { path: "", component: HomeComponent, pathMatch: "full" },
   { path: "cities", component: CityComponent },
   { path: "city/:id", component: CityEditComponent },
+  { path: "city", component: CityEditComponent },
   { path: "countries", component: CountryComponent },
 ];
 @NgModule({

@@ -28,7 +28,7 @@ namespace WorldCities.Controllers
             string filterColumn,
             string filterQuery)
         {
-            CountryRequestParameters requestParameters = new(new QueryMetaData()
+            CountryRequestParameters requestParameters = new(new QueryMetaData(500)
             {
                 IsZeroBase = true,
                 PageSize = pageSize ?? 10,

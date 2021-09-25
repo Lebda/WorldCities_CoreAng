@@ -55,7 +55,7 @@ namespace WorldCities.Controllers
         }
 
         // GET: api/Cities/5
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}", Name = "CityById")]
         public async Task<ActionResult<City>> GetCity(int id)
         {
             var city = await repository.City.GetAsync(id, false);
@@ -70,7 +70,7 @@ namespace WorldCities.Controllers
 
         // PUT: api/Cities/5
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> UpdateCompany(int id, CityForUpdateDto company)
+        public async Task<IActionResult> UpdateCity(int id, CityForUpdateDto company)
         {
             if (company == null)
             {
@@ -89,6 +89,27 @@ namespace WorldCities.Controllers
             await repository.SaveAsync();
 
             return NoContent();
+        }
+
+        //POST: api/Cities
+        [HttpPost(Name = "CreateCity")]
+        public async Task<IActionResult> PostCity(CityForCreateDto dto)
+        {
+            if (dto == null)
+            {
+                //logger.LogError("CompanyForCreationDto object sent from client is null.");
+                return BadRequest("dto object is null");
+            }
+
+            var entity = mapper.Map<City>(dto);
+
+            await repository.City.CreateEntityAsync(entity);
+            await repository.SaveAsync();
+
+            var entityToReturn = mapper.Map<CityDto>(entity);
+
+            return CreatedAtRoute("CityById", new { id = entityToReturn.Id },
+                entityToReturn);
         }
 
         // PUT: api/Cities/5
@@ -120,17 +141,6 @@ namespace WorldCities.Controllers
         //    }
 
         //    return NoContent();
-        //}
-
-        // POST: api/Cities
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        //[HttpPost]
-        //public async Task<ActionResult<City>> PostCity(City city)
-        //{
-        //    _context.Cities.Add(city);
-        //    await _context.SaveChangesAsync();
-
-        //    return CreatedAtAction("GetCity", new { id = city.Id }, city);
         //}
 
         // DELETE: api/Cities/5

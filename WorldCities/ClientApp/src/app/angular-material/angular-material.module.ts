@@ -4,6 +4,7 @@ import { MatSortModule } from "@angular/material/sort";
 import { MatTableModule } from "@angular/material/table";
 import { MatInputModule } from "@angular/material/input";
 import { ReactiveFormsModule } from "@angular/forms";
+import { MatSelectModule } from "@angular/material/select";
 
 const items = [
   MatTableModule,
@@ -11,6 +12,7 @@ const items = [
   MatSortModule,
   MatInputModule,
   ReactiveFormsModule,
+  MatSelectModule,
 ];
 
 @NgModule({

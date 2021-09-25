@@ -13,6 +13,8 @@ namespace CompanyEmployees.Mapping
             //        opt => opt.MapFrom(x => string.Join(' ', x.Address, x.Country)));
 
             CreateMap<CityForUpdateDto, City>();
+            CreateMap<CityForCreateDto, City>();
+            CreateMap<City, CityDto>();
         }
     }
 }

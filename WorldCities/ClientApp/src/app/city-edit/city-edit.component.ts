@@ -1,8 +1,9 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpParams } from "@angular/common/http";
 import { Component, Inject, OnInit } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { City } from "../city/city";
+import { Country } from "../country/country";
 
 @Component({
   selector: "app-city-edit",
@@ -19,7 +20,10 @@ export class CityEditComponent implements OnInit {
   // the city object id, as fetched from the active route:
   // It's NULL when we're adding a new city,
   // and not NULL when we're editing an existing one.
-  private id: string | null = null;
+  public id: string | null = null;
+
+  // the countries array for the select
+  public countries = new Array<Country>();
 
   public constructor(
     private activatedRoute: ActivatedRoute,
@@ -31,6 +35,7 @@ export class CityEditComponent implements OnInit {
       name: new FormControl(""),
       lat: new FormControl(""),
       lon: new FormControl(""),
+      countryId: new FormControl(""),
     });
   }
 
@@ -39,26 +44,42 @@ export class CityEditComponent implements OnInit {
   }
 
   public onSubmit(): void {
-    if (!this.item) {
-      return;
+    const city = this.id && this.item ? this.item : <City>{};
+
+    city.name = this.form.get("name")?.value ?? "";
+    city.lat = this.form.get("lat")?.value ?? 0.0;
+    city.lon = this.form.get("lon")?.value ?? 0.0;
+    city.countryId = this.form.get("countryId")?.value ?? 41193;
+
+    const url = this.getUrl(this.item?.id?.toString() ?? null);
+
+    if (this.id) {
+      // EDIT mode
+      this.http.put<City>(url, city).subscribe(
+        (result) => {
+          console.log("City " + city.id + " has been updated.");
+          // go back to cities view
+          this.router.navigate(["/cities"]);
+        },
+        (error) => console.error(error)
+      );
+    } else {
+      // ADD NEW mode
+      this.http.post<City>(url, city).subscribe(
+        (result) => {
+          console.log("City " + result.id + " has been created.");
+          // go back to cities view
+          this.router.navigate(["/cities"]);
+        },
+        (error) => console.error(error)
+      );
     }
-    this.item.name = this.form.get("name")?.value ?? "";
-    this.item.lat = this.form.get("lat")?.value ?? 0.0;
-    this.item.lon = this.form.get("lon")?.value ?? 0.0;
-    const url = this.getUrl(this.item.id.toString());
-    this.http.put<City>(url, this.item).subscribe(
-      (result) => {
-        if (this.item) {
-          console.log("City " + this.item.id + " has been updated.");
-        }
-        // go back to cities view
-        this.router.navigate(["/cities"]);
-      },
-      (error) => console.error(error)
-    );
   }
 
   private loadData(): void {
+    // load countries
+    this.loadCountries();
+
     // retrieve the ID from the 'id'
     this.id = this.activatedRoute.snapshot.paramMap.get("id");
     // fetch the city from the server
@@ -80,8 +101,25 @@ export class CityEditComponent implements OnInit {
       this.title = "Create a new City";
     }
   }
+  loadCountries() {
+    // fetch all the countries from the server
+    const url = "https://localhost:44355/" + "api/Countries/";
+    const params = new HttpParams()
+      .set("pageIndex", "0")
+      .set("pageSize", "9999")
+      .set("sortColumn", "name");
+    this.http.get<any>(url, { params }).subscribe(
+      (result) => {
+        this.countries = result.data;
+      },
+      (error) => console.error(error)
+    );
+  }
 
   private getUrl(id: string | null): string {
-    return "https://localhost:44355/" + "api/Cities/" + id;
+    if (id) {
+      return this.baseUrl + "api/Cities/" + id;
+    }
+    return this.baseUrl + "api/Cities/";
   }
 }

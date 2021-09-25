@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace WorldCities.Models.Dto
 {
-    public class CityForUpdateDto
+    public class CityForCreateDto
     {
         [Required]
         public string Name { get; set; }
@@ -16,5 +16,7 @@ namespace WorldCities.Models.Dto
 
         [Required]
         public decimal Lon { get; set; }
+        [Required]
+        public int CountryId { get; set; }
     }
 }

@@ -6,7 +6,13 @@
         private int pageIndex = 10;
         private int startIndex => IsZeroBase ? 0 : 1;
 
-        public int MaxPageSize => 100;
+        public int MaxPageSize { get; }
+
+        public QueryMetaData(int maxPageSize = 100)
+        {
+            MaxPageSize = maxPageSize;
+        }
+
         public int BaseIndex => startIndex;
         public bool IsZeroBase { get; set; } = true;
         public int PageIndex
