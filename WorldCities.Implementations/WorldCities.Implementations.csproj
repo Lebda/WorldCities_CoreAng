@@ -14,16 +14,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
     <PackageReference Include="EPPlus" Version="5.7.5" />
     <PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.12" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\WorldCities.Dal\WorldCities.Models.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Mapping\" />
   </ItemGroup>
 
 </Project>

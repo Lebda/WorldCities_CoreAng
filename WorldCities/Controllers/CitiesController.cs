@@ -1,7 +1,8 @@
 ﻿using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using WorldCities.Implementations.Contracts;
-using WorldCities.Models;
+using WorldCities.Models.Dto;
 using WorldCities.Models.Models;
 using WorldCities.Models.RequestFeatures;
 using WorldCities.Models.ResponseFeatures;
@@ -13,12 +14,14 @@ namespace WorldCities.Controllers
     public class CitiesController : ControllerBase
     {
         private readonly IRepositoryManager repository;
+        private readonly IMapper mapper;
 
         public CitiesController(
-            WorldCitiesDbContext context, 
-            IRepositoryManager repository)
+            IRepositoryManager repository,
+            IMapper mapper)
         {
             this.repository = repository;
+            this.mapper = mapper;
         }
 
         // GET: api/Cities
@@ -63,6 +66,29 @@ namespace WorldCities.Controllers
             }
 
             return city;
+        }
+
+        // PUT: api/Cities/5
+        [HttpPut("{id:int}")]
+        public async Task<IActionResult> UpdateCompany(int id, CityForUpdateDto company)
+        {
+            if (company == null)
+            {
+                //logger.LogError("CompanyForUpdateDto object sent from client is null.");
+                return BadRequest("CompanyForUpdateDto object is null");
+            }
+
+            var companyEntity = await repository.City.GetAsync(id, trackChanges: true);
+            if (companyEntity == null)
+            {
+                //logger.LogInfo($"Company with id: {id} doesn't exist in the database.");
+                return NotFound();
+            }
+
+            mapper.Map(company, companyEntity);
+            await repository.SaveAsync();
+
+            return NoContent();
         }
 
         // PUT: api/Cities/5
