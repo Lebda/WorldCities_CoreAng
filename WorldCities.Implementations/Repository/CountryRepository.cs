@@ -46,5 +46,28 @@ namespace WorldCities.Implementations.Repository
 
         public async Task CreateEntityAsync(Country company) => await CreateAsync(company);
         public void DeleteEntity(Country company) => Delete(company);
+
+        public async Task<bool> IsDupeFieldAsync(int countryId, string fieldName, string fieldValue)
+        {
+            switch (fieldName)
+            {
+                case "name":
+                    return await FindByCondition(c => c.Name == fieldValue && c.Id != countryId, false).SingleOrDefaultAsync() != null;
+                case "iso2":
+                    return await FindByCondition(c => c.ISO2 == fieldValue && c.Id != countryId, false).SingleOrDefaultAsync() != null;
+                case "iso3":
+                    return await FindByCondition(c => c.ISO3 == fieldValue && c.Id != countryId, false).SingleOrDefaultAsync() != null;
+                default:
+                    return false;
+            }
+
+            // Alternative approach (using System.Linq.Dynamic.Core)
+            //return (ApiResult<Country>.IsValidProperty(fieldName, true))
+            //    ? _context.Countries.Any(
+            //        string.Format("{0} == @0 && Id != @1", fieldName),
+            //        fieldValue,
+            //        countryId)
+            //    : false;
+        }
     }
 }

@@ -112,6 +112,13 @@ namespace WorldCities.Controllers
                 entityToReturn);
         }
 
+        [HttpPost]
+        [Route("IsDupeCity")]
+        public async Task<bool> IsDupeCity(City city)
+        {
+            return await repository.City.IsDupeCityAsync(city);
+        }
+
         // PUT: api/Cities/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         //[HttpPut("{id}")]

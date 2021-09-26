@@ -47,5 +47,14 @@ namespace WorldCities.Implementations.Repository
 
         public async Task CreateEntityAsync(City company) => await CreateAsync(company);
         public void DeleteEntity(City company) => Delete(company);
+
+        public async Task<bool> IsDupeCityAsync(City city) =>
+        await FindByCondition(e => 
+        e.Name == city.Name
+        && e.Lat == city.Lat
+        && e.Lon == city.Lon
+        && e.CountryId == city.CountryId
+        && e.Id != city.Id, false)
+        .CountAsync() > 0;
     }
 }

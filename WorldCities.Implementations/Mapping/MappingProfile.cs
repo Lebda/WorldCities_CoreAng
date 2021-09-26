@@ -15,6 +15,10 @@ namespace CompanyEmployees.Mapping
             CreateMap<CityForUpdateDto, City>();
             CreateMap<CityForCreateDto, City>();
             CreateMap<City, CityDto>();
+
+            CreateMap<CountryForUpdateDto, Country>();
+            CreateMap<CountryForCreateDto, Country>();
+            CreateMap<Country, CountryDto>();
         }
     }
 }

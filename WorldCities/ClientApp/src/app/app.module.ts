@@ -12,6 +12,7 @@ import { HomeComponent } from "./home/home.component";
 import { NavMenuComponent } from "./nav-menu/nav-menu.component";
 import { CountryComponent } from "./country/country.component";
 import { CityEditComponent } from "./city-edit/city-edit.component";
+import { CountryEditComponent } from './country-edit/country-edit.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { CityEditComponent } from "./city-edit/city-edit.component";
     CityComponent,
     CountryComponent,
     CityEditComponent,
+    CountryEditComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: "ng-cli-universal" }),

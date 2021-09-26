@@ -70,7 +70,7 @@ export class CityComponent implements OnInit {
   }
 
   private getDataSource(event: PageEvent): Observable<ApiResult<City>> {
-    const url = "https://localhost:44355/" + "api/Cities";
+    const url = this.baseUrl + "api/Cities";
     return this.http.get<ApiResult<City>>(url, { params: this.createParams(event) });
   }
 

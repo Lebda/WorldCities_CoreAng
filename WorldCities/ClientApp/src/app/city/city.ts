@@ -1,5 +1,5 @@
 export interface City {
-  readonly id: number;
+  id: number;
   name: string;
   lat: number;
   lon: number;
