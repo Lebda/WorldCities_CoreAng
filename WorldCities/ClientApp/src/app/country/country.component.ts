@@ -3,7 +3,8 @@ import { Component, Inject, OnInit, ViewChild } from "@angular/core";
 import { MatPaginator, PageEvent } from "@angular/material/paginator";
 import { MatSort, SortDirection } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
-import { Subscription, Observable } from "rxjs";
+import { Subscription, Observable, Subject } from "rxjs";
+import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 import { ApiResult } from "../models/api-result";
 import { Country } from "./country";
 
@@ -31,6 +32,8 @@ export class CountryComponent implements OnInit {
   private defaultPageSize = 10;
   private defaultFilterColumn = "name";
   private filterQuery: string | null = null;
+
+  private filterTextChanged: Subject<string> = new Subject<string>();
 
   constructor(private http: HttpClient, @Inject("BASE_URL") private baseUrl: string) {
     this.itemsSource.paginator = this.paginator;
@@ -85,5 +88,16 @@ export class CountryComponent implements OnInit {
         .set("filterQuery", this.filterQuery);
     }
     return params;
+  }
+
+  public onFilterTextChanged(filterText: string): void {
+    if (this.filterTextChanged.observers.length === 0) {
+      this.filterTextChanged
+        .pipe(debounceTime(1000), distinctUntilChanged())
+        .subscribe((query) => {
+          this.loadDataInitial(query);
+        });
+    }
+    this.filterTextChanged.next(filterText);
   }
 }

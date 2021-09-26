@@ -11,7 +11,7 @@
 </div>
 
 <mat-form-field [hidden]="!cities$">
-  <input #help matInput (keyup)="loadDataInitial(help.value)"
+  <input #help matInput (keyup)="onFilterTextChanged(help.value)"
     placeholder="Filter by name (or part of it)...">
 </mat-form-field>
 
