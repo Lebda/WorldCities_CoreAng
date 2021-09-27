@@ -1,10 +1,10 @@
-import { HttpClient, HttpParams } from "@angular/common/http";
-import { Component, Inject, OnInit, ViewChild } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { MatPaginator, PageEvent } from "@angular/material/paginator";
 import { MatSort, SortDirection } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
 import { Observable, Subject, Subscription } from "rxjs";
 import { debounceTime, distinctUntilChanged } from "rxjs/operators";
+import { CityService } from "../Infrastructure/city.service";
 
 import { ApiResult } from "../models/api-result";
 import { City } from "./city";
@@ -36,10 +36,7 @@ export class CityComponent implements OnInit {
 
   private filterTextChanged: Subject<string> = new Subject<string>();
 
-  public constructor(
-    private http: HttpClient,
-    @Inject("BASE_URL") private baseUrl: string
-  ) {
+  public constructor(private readonly cityService: CityService) {
     this.citiesSource.paginator = this.paginator;
   }
 
@@ -76,22 +73,19 @@ export class CityComponent implements OnInit {
   }
 
   private getDataSource(event: PageEvent): Observable<ApiResult<City>> {
-    const url = this.baseUrl + "api/Cities";
-    return this.http.get<ApiResult<City>>(url, { params: this.createParams(event) });
-  }
+    const sortColumn = this.sort ? this.sort.active : this.defaultSortColumn;
+    const sortOrder = this.sort ? this.sort.direction : this.defaultSortOrder;
+    const filterColumn = this.filterQuery ? this.defaultFilterColumn : null;
+    const filterQuery = this.filterQuery ? this.filterQuery : null;
 
-  private createParams(event: PageEvent): HttpParams {
-    let params = new HttpParams()
-      .set("pageIndex", event.pageIndex.toString())
-      .set("pageSize", event.pageSize.toString())
-      .set("sortColumn", this.sort ? this.sort.active : this.defaultSortColumn)
-      .set("sortOrder", this.sort ? this.sort.direction : this.defaultSortOrder);
-    if (this.filterQuery) {
-      params = params
-        .set("filterColumn", this.defaultFilterColumn)
-        .set("filterQuery", this.filterQuery);
-    }
-    return params;
+    return this.cityService.getData(
+      event.pageIndex,
+      event.pageSize,
+      sortColumn,
+      sortOrder,
+      filterColumn ?? "name",
+      filterQuery
+    );
   }
 
   public onFilterTextChanged(filterText: string): void {

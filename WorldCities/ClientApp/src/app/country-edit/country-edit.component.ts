@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import { Component, Inject, OnInit } from "@angular/core";
 import {
   AbstractControl,
@@ -13,6 +13,7 @@ import { map } from "rxjs/operators";
 
 import { Country } from "../country/country";
 import { BaseFormComponent } from "../Infrastructure/base. form.component";
+import { CountryService } from "../Infrastructure/country.service";
 
 @Component({
   selector: "app-country-edit",
@@ -32,8 +33,7 @@ export class CountryEditComponent extends BaseFormComponent implements OnInit {
     private fb: FormBuilder,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private http: HttpClient,
-    @Inject("BASE_URL") private baseUrl: string
+    private readonly countryService: CountryService
   ) {
     super();
   }
@@ -64,8 +64,7 @@ export class CountryEditComponent extends BaseFormComponent implements OnInit {
     if (this.id) {
       // EDIT MODE
       // fetch the country from the server
-      const url = this.baseUrl + "api/Countries/" + this.id;
-      this.http.get<Country>(url).subscribe(
+      this.countryService.get(this.id).subscribe(
         (result) => {
           this.item = result;
           this.title = "Edit - " + this.item.name;
@@ -90,8 +89,7 @@ export class CountryEditComponent extends BaseFormComponent implements OnInit {
     country.iso3 = this.form.get("iso3")?.value;
     if (this.id) {
       // EDIT mode
-      const url = this.baseUrl + "api/Countries/" + country.id;
-      this.http.put<Country>(url, country).subscribe(
+      this.countryService.put(country).subscribe(
         (result) => {
           console.log("Country " + country.id + " has been updated.");
           // go back to cities view
@@ -101,8 +99,7 @@ export class CountryEditComponent extends BaseFormComponent implements OnInit {
       );
     } else {
       // ADD NEW mode
-      const url = this.baseUrl + "api/Countries";
-      this.http.post<Country>(url, country).subscribe(
+      this.countryService.post(country).subscribe(
         (result) => {
           console.log("Country " + result.id + " has been created.");
           // go back to cities view
@@ -115,16 +112,13 @@ export class CountryEditComponent extends BaseFormComponent implements OnInit {
 
   private isDupeField(fieldName: string): AsyncValidatorFn {
     return (control: AbstractControl): Observable<{ [key: string]: any } | null> => {
-      const params = new HttpParams()
-        .set("countryId", this.id ? this.id.toString() : "0")
-        .set("fieldName", fieldName)
-        .set("fieldValue", control.value);
-      const url = this.baseUrl + "api/Countries/IsDupeField";
-      return this.http.post<boolean>(url, null, { params }).pipe(
-        map((result) => {
-          return result ? { isDupeField: true } : null;
-        })
-      );
+      return this.countryService
+        .isDupeField(this.id ? this.id.toString() : "0", fieldName, control.value)
+        .pipe(
+          map((result) => {
+            return result ? { isDupeField: true } : null;
+          })
+        );
     };
   }
 }

@@ -1,10 +1,10 @@
-import { HttpClient, HttpParams } from "@angular/common/http";
-import { Component, Inject, OnInit, ViewChild } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { MatPaginator, PageEvent } from "@angular/material/paginator";
 import { MatSort, SortDirection } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
 import { Observable, Subject, Subscription } from "rxjs";
 import { debounceTime, distinctUntilChanged } from "rxjs/operators";
+import { CountryService } from "../Infrastructure/country.service";
 
 import { ApiResult } from "../models/api-result";
 import { Country } from "./country";
@@ -36,10 +36,7 @@ export class CountryComponent implements OnInit {
 
   private filterTextChanged: Subject<string> = new Subject<string>();
 
-  public constructor(
-    private http: HttpClient,
-    @Inject("BASE_URL") private baseUrl: string
-  ) {
+  public constructor(private readonly countryService: CountryService) {
     this.itemsSource.paginator = this.paginator;
   }
 
@@ -76,22 +73,18 @@ export class CountryComponent implements OnInit {
   }
 
   private getDataSource(event: PageEvent): Observable<ApiResult<Country>> {
-    const url = "https://localhost:44355/" + "api/Countries";
-    return this.http.get<ApiResult<Country>>(url, { params: this.createParams(event) });
-  }
-
-  private createParams(event: PageEvent): HttpParams {
-    let params = new HttpParams()
-      .set("pageIndex", event.pageIndex.toString())
-      .set("pageSize", event.pageSize.toString())
-      .set("sortColumn", this.sort ? this.sort.active : this.defaultSortColumn)
-      .set("sortOrder", this.sort ? this.sort.direction : this.defaultSortOrder);
-    if (this.filterQuery) {
-      params = params
-        .set("filterColumn", this.defaultFilterColumn)
-        .set("filterQuery", this.filterQuery);
-    }
-    return params;
+    const sortColumn = this.sort ? this.sort.active : this.defaultSortColumn;
+    const sortOrder = this.sort ? this.sort.direction : this.defaultSortOrder;
+    const filterColumn = this.filterQuery ? this.defaultFilterColumn : null;
+    const filterQuery = this.filterQuery ? this.filterQuery : null;
+    return this.countryService.getData(
+      event.pageIndex,
+      event.pageSize,
+      sortColumn,
+      sortOrder,
+      filterColumn ?? "name",
+      filterQuery
+    );
   }
 
   public onFilterTextChanged(filterText: string): void {
