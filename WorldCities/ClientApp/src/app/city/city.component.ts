@@ -22,7 +22,7 @@ export class CityComponent implements OnInit {
   @ViewChild(MatSort)
   public sort: MatSort | null = null;
 
-  public displayedColumns: string[] = ["id", "name", "lat", "lon"];
+  public displayedColumns: string[] = ["id", "name", "lat", "lon", "countryName"];
   public cities$: Observable<ApiResult<City>> | undefined;
   public pageSize = 10;
   public pageIndex = 0;

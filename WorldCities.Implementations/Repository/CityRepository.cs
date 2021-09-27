@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using WorldCities.Implementations.Contracts;
 using WorldCities.Implementations.RequestFeatures;
 using WorldCities.Models;
+using WorldCities.Models.Dto;
 using WorldCities.Models.Models;
 using WorldCities.Models.RequestFeatures;
 
@@ -18,7 +19,7 @@ namespace WorldCities.Implementations.Repository
         {
         }
 
-        public async Task<PagedList<City>> GetAllParamsAsync(
+        public async Task<PagedList<CityDto>> GetAllParamsAsync(
             CityRequestParameters requestParameters,
             bool trackChanges)
         {
@@ -27,6 +28,15 @@ namespace WorldCities.Implementations.Repository
                 .Filter(requestParameters)
                 //.Search(employeeParameters.SearchTerm)
                 .Sort(requestParameters)
+                .Select(c => new CityDto()
+                {
+                    Id = c.Id,
+                    Name = c.Name,
+                    Lat = c.Lat,
+                    Lon = c.Lon,
+                    CountryId = c.Country.Id,
+                    CountryName = c.Country.Name
+                })
                 .ToPagedListAsync(requestParameters.QueryMetaData);
             return pagedList;
         }

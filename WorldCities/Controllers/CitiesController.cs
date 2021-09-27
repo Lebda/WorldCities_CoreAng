@@ -26,7 +26,7 @@ namespace WorldCities.Controllers
 
         // GET: api/Cities
         [HttpGet(Name = "GetCities")]
-        public async Task<ActionResult<ApiResult<City>>> GetCities(
+        public async Task<ActionResult<ApiResult<CityDto>>> GetCities(
             int? pageIndex,
             int? pageSize,
             string sortColumn,
@@ -47,11 +47,11 @@ namespace WorldCities.Controllers
             return await GetCitiesInternal(requestParameters);
         }
 
-        private async Task<ActionResult<ApiResult<City>>> GetCitiesInternal(CityRequestParameters requestParameters)
+        private async Task<ActionResult<ApiResult<CityDto>>> GetCitiesInternal(CityRequestParameters requestParameters)
         {
             var pagedList = await repository.City.GetAllParamsAsync(requestParameters, false);
 
-            return Ok(new ApiResult<City>(pagedList));
+            return Ok(new ApiResult<CityDto>(pagedList));
         }
 
         // GET: api/Cities/5

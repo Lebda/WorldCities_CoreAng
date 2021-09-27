@@ -21,7 +21,7 @@ namespace WorldCities.Models.ResponseFeatures
 
         }
 
-        public List<T> Data { get; private set; }
+        public List<T> Data { get; set; }
         public ResponseMetaData MetaData { get; }
     }
 }

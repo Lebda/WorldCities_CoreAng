@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using WorldCities.Implementations.Contracts;
 using WorldCities.Implementations.RequestFeatures;
 using WorldCities.Models;
+using WorldCities.Models.Dto;
 using WorldCities.Models.Models;
 using WorldCities.Models.RequestFeatures;
 
@@ -17,13 +19,21 @@ namespace WorldCities.Implementations.Repository
         {
         }
 
-        public async Task<PagedList<Country>> GetAllParamsAsync(
+        public async Task<PagedList<CountryDto>> GetAllParamsAsync(
                 CountryRequestParameters requestParameters,
                 bool trackChanges)
         {
             var pagedList = await FindAll(trackChanges)
                 .OrderBy(e => e.Name)
                 .Filter(requestParameters)
+                .Select(entity => new CountryDto()
+                {
+                    Id = entity.Id,
+                    Name = entity.Name,
+                    ISO2 = entity.ISO2,
+                    ISO3 = entity.ISO3,
+                    TotCities = entity.Cities.Count
+                })
                 //.Search(employeeParameters.SearchTerm)
                 .Sort(requestParameters)
                 .ToPagedListAsync(requestParameters.QueryMetaData);

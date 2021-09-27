@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using WorldCities.Implementations.Contracts;
@@ -24,7 +25,7 @@ namespace WorldCities.Controllers
 
         // GET: api/Countries GetCountries
         [HttpGet]
-        public async Task<ActionResult<ApiResult<Country>>> GetCountries(
+        public async Task<ActionResult<ApiResult<CountryDto>>> GetCountries(
             int? pageIndex,
             int? pageSize,
             string sortColumn,
@@ -45,11 +46,13 @@ namespace WorldCities.Controllers
             return await GetCountryInternal(requestParameters);
         }
 
-        private async Task<ActionResult<ApiResult<Country>>> GetCountryInternal(CountryRequestParameters requestParameters)
+        private async Task<ActionResult<ApiResult<CountryDto>>> GetCountryInternal(CountryRequestParameters requestParameters)
         {
             var pagedList = await repository.Country.GetAllParamsAsync(requestParameters, false);
 
-            return Ok(new ApiResult<Country>(pagedList));
+            var apiResult = new ApiResult<CountryDto>(pagedList);
+
+            return Ok(apiResult);
         }
 
         // GET: api/Countries/5
