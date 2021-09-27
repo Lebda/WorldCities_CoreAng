@@ -2,11 +2,18 @@ import { AbstractControl, FormGroup } from "@angular/forms";
 
 export abstract class BaseFormComponent {
   // the form model
-  public form: FormGroup;
+  private formInternal: FormGroup | undefined;
 
-  protected constructor(formCreator: () => FormGroup) {
-    this.form = formCreator();
+  public get form(): FormGroup {
+    if (!this.formInternal) {
+      this.formInternal = this.formCreator();
+    }
+    return this.formInternal;
   }
+
+  protected abstract formCreator(): FormGroup;
+
+  protected constructor() {}
 
   // retrieve a FormControl
   public getControl(name: string): AbstractControl | null {

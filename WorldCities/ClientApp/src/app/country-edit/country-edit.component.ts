@@ -4,6 +4,7 @@ import {
   AbstractControl,
   AsyncValidatorFn,
   FormBuilder,
+  FormGroup,
   Validators,
 } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -34,21 +35,23 @@ export class CountryEditComponent extends BaseFormComponent implements OnInit {
     private http: HttpClient,
     @Inject("BASE_URL") private baseUrl: string
   ) {
-    super(() =>
-      this.fb.group({
-        name: ["", Validators.required, this.isDupeField("name")],
-        iso2: [
-          "",
-          [Validators.required, Validators.pattern(/^[a-zA-Z]{2}$/)],
-          this.isDupeField("iso2"),
-        ],
-        iso3: [
-          "",
-          [Validators.required, Validators.pattern(/^[a-zA-Z]{3}$/)],
-          this.isDupeField("iso3"),
-        ],
-      })
-    );
+    super();
+  }
+
+  protected formCreator(): FormGroup {
+    return this.fb.group({
+      name: ["", Validators.required, this.isDupeField("name")],
+      iso2: [
+        "",
+        [Validators.required, Validators.pattern(/^[a-zA-Z]{2}$/)],
+        this.isDupeField("iso2"),
+      ],
+      iso3: [
+        "",
+        [Validators.required, Validators.pattern(/^[a-zA-Z]{3}$/)],
+        this.isDupeField("iso3"),
+      ],
+    });
   }
 
   public ngOnInit(): void {
