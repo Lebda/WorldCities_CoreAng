@@ -1,27 +1,26 @@
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Component, Inject, OnInit } from "@angular/core";
 import {
-  FormGroup,
-  FormBuilder,
-  Validators,
   AbstractControl,
   AsyncValidatorFn,
+  FormBuilder,
+  Validators,
 } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
+
 import { Country } from "../country/country";
+import { BaseFormComponent } from "../Infrastructure/base. form.component";
 
 @Component({
   selector: "app-country-edit",
   templateUrl: "./country-edit.component.html",
   styleUrls: ["./country-edit.component.css"],
 })
-export class CountryEditComponent implements OnInit {
+export class CountryEditComponent extends BaseFormComponent implements OnInit {
   // the view title
   public title = "";
-  // the form model
-  public form: FormGroup;
   // the city object to edit or create
   public item: Country | undefined;
   // the city object id, as fetched from the active route:
@@ -35,19 +34,21 @@ export class CountryEditComponent implements OnInit {
     private http: HttpClient,
     @Inject("BASE_URL") private baseUrl: string
   ) {
-    this.form = this.fb.group({
-      name: ["", Validators.required, this.isDupeField("name")],
-      iso2: [
-        "",
-        [Validators.required, Validators.pattern(/^[a-zA-Z]{2}$/)],
-        this.isDupeField("iso2"),
-      ],
-      iso3: [
-        "",
-        [Validators.required, Validators.pattern(/^[a-zA-Z]{3}$/)],
-        this.isDupeField("iso3"),
-      ],
-    });
+    super(() =>
+      this.fb.group({
+        name: ["", Validators.required, this.isDupeField("name")],
+        iso2: [
+          "",
+          [Validators.required, Validators.pattern(/^[a-zA-Z]{2}$/)],
+          this.isDupeField("iso2"),
+        ],
+        iso3: [
+          "",
+          [Validators.required, Validators.pattern(/^[a-zA-Z]{3}$/)],
+          this.isDupeField("iso3"),
+        ],
+      })
+    );
   }
 
   public ngOnInit(): void {

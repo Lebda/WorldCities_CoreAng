@@ -7,12 +7,12 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { AngularMaterialModule } from "./angular-material/angular-material.module";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
+import { CityEditComponent } from "./city-edit/city-edit.component";
 import { CityComponent } from "./city/city.component";
+import { CountryEditComponent } from "./country-edit/country-edit.component";
+import { CountryComponent } from "./country/country.component";
 import { HomeComponent } from "./home/home.component";
 import { NavMenuComponent } from "./nav-menu/nav-menu.component";
-import { CountryComponent } from "./country/country.component";
-import { CityEditComponent } from "./city-edit/city-edit.component";
-import { CountryEditComponent } from './country-edit/country-edit.component';
 
 @NgModule({
   declarations: [

@@ -36,7 +36,10 @@ export class CityComponent implements OnInit {
 
   private filterTextChanged: Subject<string> = new Subject<string>();
 
-  constructor(private http: HttpClient, @Inject("BASE_URL") private baseUrl: string) {
+  public constructor(
+    private http: HttpClient,
+    @Inject("BASE_URL") private baseUrl: string
+  ) {
     this.citiesSource.paginator = this.paginator;
   }
 

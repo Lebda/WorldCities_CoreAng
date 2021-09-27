@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { CityEditComponent } from './city-edit.component';
+import { CityEditComponent } from "./city-edit.component";
 
-describe('CityEditComponent', () => {
+describe("CityEditComponent", () => {
   let component: CityEditComponent;
   let fixture: ComponentFixture<CityEditComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CityEditComponent ]
-    })
-    .compileComponents();
+      declarations: [CityEditComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('CityEditComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

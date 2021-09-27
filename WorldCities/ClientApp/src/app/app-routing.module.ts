@@ -1,7 +1,7 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
-import { CityEditComponent } from "./city-edit/city-edit.component";
 
+import { CityEditComponent } from "./city-edit/city-edit.component";
 import { CityComponent } from "./city/city.component";
 import { CountryEditComponent } from "./country-edit/country-edit.component";
 import { CountryComponent } from "./country/country.component";

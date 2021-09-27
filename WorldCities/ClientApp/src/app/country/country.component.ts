@@ -3,8 +3,9 @@ import { Component, Inject, OnInit, ViewChild } from "@angular/core";
 import { MatPaginator, PageEvent } from "@angular/material/paginator";
 import { MatSort, SortDirection } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
-import { Subscription, Observable, Subject } from "rxjs";
+import { Observable, Subject, Subscription } from "rxjs";
 import { debounceTime, distinctUntilChanged } from "rxjs/operators";
+
 import { ApiResult } from "../models/api-result";
 import { Country } from "./country";
 
@@ -35,7 +36,10 @@ export class CountryComponent implements OnInit {
 
   private filterTextChanged: Subject<string> = new Subject<string>();
 
-  constructor(private http: HttpClient, @Inject("BASE_URL") private baseUrl: string) {
+  public constructor(
+    private http: HttpClient,
+    @Inject("BASE_URL") private baseUrl: string
+  ) {
     this.itemsSource.paginator = this.paginator;
   }
 
