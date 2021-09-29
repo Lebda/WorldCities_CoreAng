@@ -1,8 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using WorldCities.Implementations.Contracts;
 using WorldCities.Models;
+using WorldCities.Models.Models;
 
 namespace WorldCities.Extensions
 {
@@ -31,5 +34,23 @@ namespace WorldCities.Extensions
 
         public static void ConfigureRepositoryManager(this IServiceCollection services) =>
             services.ConfigureImplementations();
+
+        public static void ConfigurIdentity(this IServiceCollection services)
+        {
+            // Add ASP.NET Core Identity support
+            services.AddDefaultIdentity<ApplicationUser>(options =>
+            {
+                options.SignIn.RequireConfirmedAccount = true;
+                options.Password.RequireDigit = true;
+                options.Password.RequireLowercase = true;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireNonAlphanumeric = true;
+                options.Password.RequiredLength = 8;
+            })
+            .AddRoles<IdentityRole>()
+            .AddEntityFrameworkStores<WorldCitiesDbContext>();
+            services.AddIdentityServer().AddApiAuthorization<ApplicationUser, WorldCitiesDbContext>();
+            services.AddAuthentication().AddIdentityServerJwt();
+        }
     }
 }
