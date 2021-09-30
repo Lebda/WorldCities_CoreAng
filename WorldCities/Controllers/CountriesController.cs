@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WorldCities.Implementations.Contracts;
 using WorldCities.Models.Dto;
@@ -70,6 +71,7 @@ namespace WorldCities.Controllers
         }
 
         // PUT: api/Countries/5
+        [Authorize]
         [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdateCity(int id, CountryForUpdateDto dto)
         {
@@ -93,6 +95,7 @@ namespace WorldCities.Controllers
         }
 
         //POST: api/Cities
+        [Authorize]
         [HttpPost(Name = "CreateCountry")]
         public async Task<IActionResult> CreateCountry(CountryForCreateDto dto)
         {

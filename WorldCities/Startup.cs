@@ -71,6 +71,8 @@ namespace WorldCities
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
+
+                endpoints.MapRazorPages();
             });
 
             app.UseSpa(spa =>

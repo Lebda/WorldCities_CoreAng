@@ -15,8 +15,8 @@ import { AuthorizeService } from "./authorize.service";
   providedIn: "root",
 })
 export class AuthorizeGuard implements CanActivate {
-  constructor(private authorize: AuthorizeService, private router: Router) {}
-  canActivate(
+  public constructor(private authorize: AuthorizeService, private router: Router) {}
+  public canActivate(
     _next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean> | Promise<boolean> | boolean {
